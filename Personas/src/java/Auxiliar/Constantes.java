@@ -17,6 +17,7 @@ public class Constantes {
     public static final String ficheroBitacora="bitacora.txt";
     //TABLAS
     public static final String T_PERSONAS = "Personas";
+    public static final String T_PERSONAS_ASIGNATURAS = "PersonasAsignaturas";
     public static final String T_CURSOS = "Cursos";
     public static final String T_ASIGNATURAS = "Asignaturas";
     
@@ -31,6 +32,8 @@ public class Constantes {
     public static final String V_LISTAR = VISTAS_DIR + "/listar.jsp";
     public static final String V_EDITAR = VISTAS_DIR + "/editar.jsp";
     public static final String V_RECUPERAR = VISTAS_DIR + "/recuperar.jsp";
+    public static final String V_BUSCAMINAS = VISTAS_DIR + "/buscaminas.jsp";
+    public static final String V_BUSCAMINAS_JUEGO = VISTAS_DIR + "/buscaminasJuego.jsp";
     
     //CONTROLADORES
     public static final String CONTROLADOR_DIR = ROOT + "/Controlador";

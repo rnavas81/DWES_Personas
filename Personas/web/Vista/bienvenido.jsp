@@ -1,3 +1,4 @@
+<%@page import="Modelo.Persona"%>
 <%@page import="Auxiliar.Constantes"%>
 <!DOCTYPE html>
 <!--
@@ -13,5 +14,19 @@ and open the template in the editor.
         <link rel="stylesheet" href="<%=Constantes.CSS_GLOBAL%>"/>
     </head>
     <body>
+        <%
+            Persona persona = (Persona)session.getAttribute("usuario");
+            %>
+        <section>
+            <form action="<%=Constantes.C_CONTROLADOR%>">
+                <div>
+                    Partidas jugadas: <%=persona.getPJugadas()%>
+                    Partidas ganadas: <%=persona.getPGanadas()%>
+                </div>
+                <input type="submit" name="accion" value="Jugar" />
+                <input type="submit" name="accion" value="Salir" />
+            </form>
+            
+        </section>
     </body>
 </html>

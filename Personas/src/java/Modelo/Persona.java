@@ -41,7 +41,7 @@ public class Persona {
         this.token = "";
     }
 
-    Persona(String DNI, String nombre, String apellidos, String email, String tfno, int tipo, int edad, int genero, String fecha, Curso c, int PJugadas, int PGanadas) {
+    public Persona(String DNI, String nombre, String apellidos, String email, String tfno, int tipo, int edad, int genero, String fecha, Curso c, int PJugadas, int PGanadas) {
         this.DNI = DNI;
         this.nombre = nombre!=null?nombre:"";
         this.apellidos = apellidos!=null?apellidos:"";
@@ -54,6 +54,20 @@ public class Persona {
         this.PJugadas = PJugadas;
         this.PGanadas = PGanadas;
         this.asignaturas = new LinkedList<>();
+    }
+    public Persona(String DNI, String nombre, String apellidos, String email, String tfno, int tipo, int edad, int genero, String fecha, Curso c,LinkedList asignaturas) {
+        this.DNI = DNI;
+        this.nombre = nombre!=null?nombre:"";
+        this.apellidos = apellidos!=null?apellidos:"";
+        this.email = email;
+        this.tipo = tipo;
+        this.edad = edad;
+        this.genero = genero;
+        this.fecha = fecha;
+        this.curso = c;
+        this.PJugadas = 0;
+        this.PGanadas = 0;
+        this.asignaturas = asignaturas;
     }
 
     public String getNombre() {
@@ -96,7 +110,7 @@ public class Persona {
         this.fecha = fecha;
     }
 
-    public LinkedList getAsignaturas() {
+    public LinkedList<Asignatura> getAsignaturas() {
         return asignaturas;
     }
 
@@ -178,10 +192,12 @@ public class Persona {
 
     public void addPartida() {
         this.PJugadas++;
+        ConexionEstatica.addPartida(this.DNI,this.PJugadas);
     }
 
     public void addGanada() {
         this.PGanadas++;
+        ConexionEstatica.addPartidaGanada(this.DNI,this.PGanadas);
     }
 
     @Override

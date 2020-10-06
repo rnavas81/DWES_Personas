@@ -14,8 +14,15 @@
         <link rel="stylesheet" href="<%=Constantes.CSS_GLOBAL%>"/>
     </head>
     <body>
+        <%
+        %>
         <h1>Acceso</h1>
         <form action="<%=Constantes.C_CONTROLADOR%>" method="POST">
+            <%
+                if(session.getAttribute("msg_index")!=null){
+                    %><p><%=session.getAttribute("msg_index")%></p><%
+                   session.removeAttribute("msg_index");
+                }%>
             <label>DNI</label>
             <input type="dni" name="dni"/>
             <label>Contraseña</label>
