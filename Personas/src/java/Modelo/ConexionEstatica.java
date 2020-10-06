@@ -102,10 +102,10 @@ public class ConexionEstatica {
         Persona existe = null;
         abrirBD();
         try {
-            System.out.println(Consultas.testPersona(dni, password));
             ConexionEstatica.Conj_Registros = ConexionEstatica.Sentencia_SQL.executeQuery(Consultas.testPersona(dni,password));
             if (ConexionEstatica.Conj_Registros.next())//Si devuelve true es que existe.
             {
+                System.out.println(Consultas.testPersona(dni, password));
                 Curso c = new Curso(Conj_Registros.getString("Codigo"),Conj_Registros.getString("Nombre"));
                 existe = new Persona(
                     Conj_Registros.getString("DNI"),

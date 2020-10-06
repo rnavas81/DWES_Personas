@@ -20,7 +20,7 @@ public class Constantes {
     public static final String T_CURSOS = "Cursos";
     public static final String T_ASIGNATURAS = "Asignaturas";
     
-    public static final String ROOT = "/CRUD_LIST_BBDD";
+    public static final String ROOT = "/Personas";
     //VISTAS
     public static final String VISTAS_DIR = ROOT + "/Vista";
     public static final String V_INDEX = ROOT + "/index.jsp";
