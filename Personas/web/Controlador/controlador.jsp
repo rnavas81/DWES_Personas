@@ -4,6 +4,15 @@
     Author     : rodrigo
 --%>
 
+<%@page import="java.time.ZonedDateTime"%>
+<%@page import="java.nio.file.Paths"%>
+<%@page import="java.nio.file.Path"%>
+<%@page import="java.nio.file.Files"%>
+<%@page import="java.io.File"%>
+<%@page import="org.apache.commons.fileupload.FileItem"%>
+<%@page import="org.apache.commons.fileupload.disk.DiskFileItemFactory"%>
+<%@page import="org.apache.commons.fileupload.servlet.ServletFileUpload"%>
+<%@page import="org.apache.commons.fileupload.FileItemFactory"%>
 <%@page import="Modelo.Asignatura"%>
 <%@page import="Modelo.Curso"%>
 <%@page import="Auxiliar.Constantes"%>
@@ -13,10 +22,10 @@
 <%    // Recupera la acción 
     String accion = request.getParameter("accion");
     if(accion == null){
-        if(request.getParameter("eliminar")!=null){
-            accion = "eliminar";
-        } else if(request.getParameter("modificar")!=null){
-            accion = "modificar";
+        if(request.getParameter("cancelarEditarPerfil")!=null){
+            accion = "Volver";
+        } else if(request.getParameter("modificarEditarPerfil")!=null){
+            accion = "modificarPerfil";
         } else {
             session.invalidate();
             response.sendRedirect(Constantes.V_INDEX);            
@@ -142,7 +151,8 @@
 
     } else if(accion.equals("Jugar")){
         response.sendRedirect(Constantes.V_BUSCAMINAS);
-        
+    } else if(accion.equals("Editar")){
+        response.sendRedirect(Constantes.V_EDITAR_PERFIL);        
     } else {
         session.invalidate();
         response.sendRedirect(Constantes.V_INDEX);

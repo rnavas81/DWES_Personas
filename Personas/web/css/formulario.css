@@ -41,3 +41,6 @@ input[type="radio"] {
 fieldset label {
     display: inline;
 }
+form > img {
+    width: 150px;
+}

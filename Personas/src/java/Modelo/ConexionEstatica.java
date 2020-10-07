@@ -267,9 +267,22 @@ public class ConexionEstatica {
 
         return hecho;
     }
+    public static void editarPerfil(Persona p){
+        try {
+            if (existeUsuario(p.getDNI()) != null) {
+                abrirBD();
+                System.out.println(Consultas.actualizarPerfilPersona(p));
+                ConexionEstatica.Sentencia_SQL.executeUpdate(Consultas.actualizarPerfilPersona(p));
+            }
+        } catch (SQLException e) {
+            System.out.println("editarPerfil[Error] = " + e.getMessage());
+        } finally {
+            cerrarBD();
+        }
+        
+    }
 
     public static void addPartida(String DNI, int PJugadas) {
-        System.out.println("addPartida " + DNI + " || " + PJugadas);
         try {
             if (existeUsuario(DNI) != null) {
                 abrirBD();
@@ -283,7 +296,6 @@ public class ConexionEstatica {
     }
 
     public static void addPartidaGanada(String DNI, int PGanadas) {
-        System.out.println("addPartidaGanada " + DNI + " || " + PGanadas);
         try {
             if (existeUsuario(DNI) != null) {
                 abrirBD();
