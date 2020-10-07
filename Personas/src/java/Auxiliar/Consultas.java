@@ -16,18 +16,35 @@ public class Consultas {
     /////////////////////////////////
     // PERSONAS
     ////////////////////////////////
-    public static String getPersonas = "SELECT p.`DNI`, p.`Tipo`, p.`Nombre`, p.`Apellidos`, p.`Email`, p.`Tfno`, p.`Edad`, p.`Genero`, p.`Fecha` , p.`PJugadas` , p.`PGanadas` ,c.`Codigo`,c.`Nombre` " +
+    private static String[] Campos_Persona = {"DNI", "Tipo", "Nombre", "Apellidos", "Email", "Tfno", "Edad", "Genero", "Fecha", "PJugadas", "PGanadas","Avatar","Username"};
+    private static String[] Campos_Curso = {"Codigo","Nombre"};
+    private static String[] Campos_Asignatura = {"Codigo","Nombre"};
+    private static String getCampos(String[] campos,String pref){
+        String response = "";
+        boolean primero = true;
+        for (String campo : campos) {
+            if(!primero){
+                response+=",";
+            }
+            response += pref+"."+campo;
+            primero=false;
+        }
+        return response;
+    }
+    public static String getPersonas(){
+        return "SELECT "+getCampos(Campos_Persona,"p")+"," +getCampos(Campos_Curso, "c") + " " +
                 "FROM `"+Constantes.T_PERSONAS+"` p " +
                 "LEFT JOIN `Cursos` AS c ON c.Codigo = p.Curso " +
                 "WHERE p.Habilitado = 1 ORDER BY p.Apellidos,p.Nombre";
+    }
     public static String getPersona(String DNI){
-        return  "SELECT p.`DNI`, p.`Tipo`, p.`Nombre`, p.`Apellidos`, p.`Email`, p.`Tfno`, p.`Edad`, p.`Genero`, p.`Fecha`, p.`PJugadas` , p.`PGanadas` ,c.`Codigo`,c.`Nombre` " +
+        return "SELECT "+getCampos(Campos_Persona,"p")+"," +getCampos(Campos_Curso, "c") + " " +
                 "FROM `"+Constantes.T_PERSONAS+"` p " +
                 "LEFT JOIN `Cursos` AS c ON c.Codigo = p.Curso " +
                 "WHERE DNI = '"+DNI+"' AND p.Habilitado = 1";
     }
     public static String testPersona(String DNI,String password){
-        return  "SELECT p.`DNI`, p.`Tipo`, p.`Nombre`, p.`Apellidos`, p.`Email`, p.`Tfno`, p.`Edad`, p.`Genero`, p.`Fecha`, p.`PJugadas` , p.`PGanadas` ,c.`Codigo`,c.`Nombre` " +
+        return "SELECT "+getCampos(Campos_Persona,"p")+"," +getCampos(Campos_Curso, "c") + " " +
                 "FROM `"+Constantes.T_PERSONAS+"` p " +
                 "LEFT JOIN `Cursos` AS c ON c.Codigo = p.Curso " +
                 "WHERE DNI = '"+DNI+"' AND Password='"+password+"' AND p.Habilitado = 1";
@@ -75,15 +92,15 @@ public class Consultas {
         return consulta;
     }
     public static String deletePersona(String DNI){
-        return "DELETE FORM "+Constantes.T_PERSONAS+" WHERE DNI='"+DNI+"'";
+        return "DELETE FROM "+Constantes.T_PERSONAS+" WHERE DNI='"+DNI+"'";
     }
     public static String insertPersonaAsignatura(Persona persona,Asignatura asignatura){
         return "INSERT INTO "+Constantes.T_PERSONAS_ASIGNATURAS
                 +" (RPersona,RAsignatura)"
                 +" VALUES ('"+persona.getDNI()+"','"+asignatura.getCodigo()+"');";
     }
-    public static String eliminarPersonaAsignaturas(Persona persona){
-        return "DELETE FORM "+Constantes.T_PERSONAS_ASIGNATURAS+" WHERE RPersona='"+persona.getDNI()+"';";
+    public static String deletePersonaAsignaturas(Persona persona){
+        return "DELETE FROM "+Constantes.T_PERSONAS_ASIGNATURAS+" WHERE RPersona='"+persona.getDNI()+"';";
     }
     public static String ModificarDatoPersona(String DNI, String Campo, String Valor) {
         return "UPDATE "  +Constantes.T_PERSONAS+ " SET `"+Campo+"` = '" + Valor + "' WHERE DNI = '" + DNI + "'";
@@ -103,6 +120,13 @@ public class Consultas {
     public static String getAsignaturas = "SELECT * FROM `"+Constantes.T_ASIGNATURAS+"`";
     public static String getAsignatura(String codigo){
         return getAsignaturas+" WHERE codigo = '"+codigo+"'";
+    }
+
+    public static String getPersonaAsignaturas(String dni) {
+        return "SELECT a.Codigo,a.Nombre " +
+                "FROM PersonasAsignaturas pa " +
+                "RIGHT JOIN Asignaturas a ON a.Codigo=pa.RAsignatura " +
+                "WHERE pa.RPersona = '"+dni+"'";
     }
     
 }

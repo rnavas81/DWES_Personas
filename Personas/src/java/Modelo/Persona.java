@@ -9,39 +9,28 @@ import java.util.LinkedList;
  */
 public class Persona {
 
-    private String nombre;
-    private String DNI;
-    private String apellidos;
-    private String email;
-    private int tipo;
-    private int edad;
-    private int genero;
-    private String fecha;
-    private LinkedList<Asignatura> asignaturas;
-    private Curso curso;
-    private String password;
-    private String telefono;
-    private int PJugadas;
-    private int PGanadas;
-    private String token;
-
+    private String DNI = "";
+    private String nombre = "";
+    private String apellidos = "";
+    private String email = "";
+    private int tipo = 0;
+    private int edad = 0;
+    private int genero = 0;
+    private String fecha = "";
+    private LinkedList<Asignatura> asignaturas = new LinkedList<>();
+    private Curso curso = null;
+    private String password = "";
+    private String telefono = "";
+    private int PJugadas = 0;
+    private int PGanadas = 0;
+    private String avatar = "";
+    private String username = "";
+    private String token = "";
+    
     public Persona() {
-        this.DNI = "";
-        this.nombre = "";
-        this.apellidos = "";
-        this.email = "";
-        this.tipo = 0;
-        this.edad = 0;
-        this.genero = 0;
-        this.fecha = "";
-        this.asignaturas = new LinkedList<>();
-        this.curso = new Curso();
-        this.password = "";
-        this.telefono = "";
-        this.token = "";
     }
 
-    public Persona(String DNI, String nombre, String apellidos, String email, String tfno, int tipo, int edad, int genero, String fecha, Curso c, int PJugadas, int PGanadas) {
+    public Persona(String DNI, String nombre, String apellidos, String email, String tfno, int tipo, int edad, int genero, String fecha, Curso c, int PJugadas, int PGanadas,String username,String avatar) {
         this.DNI = DNI;
         this.nombre = nombre!=null?nombre:"";
         this.apellidos = apellidos!=null?apellidos:"";
@@ -53,9 +42,25 @@ public class Persona {
         this.curso = c;
         this.PJugadas = PJugadas;
         this.PGanadas = PGanadas;
-        this.asignaturas = new LinkedList<>();
+        this.avatar = avatar;
+        this.username = username;
     }
-    public Persona(String DNI, String nombre, String apellidos, String email, String tfno, int tipo, int edad, int genero, String fecha, Curso c,LinkedList asignaturas) {
+
+    public Persona(String DNI, String nombre, String apellidos, String email, String tfno, int tipo, int edad, int genero, String fecha, Curso c, LinkedList<Asignatura> asignaturas, int PJugadas, int PGanadas) {
+        this.DNI = DNI;
+        this.nombre = nombre!=null?nombre:"";
+        this.apellidos = apellidos!=null?apellidos:"";
+        this.email = email;
+        this.tipo = tipo;
+        this.edad = edad;
+        this.genero = genero;
+        this.fecha = fecha;
+        this.curso = c;
+        this.PJugadas = PJugadas;
+        this.PGanadas = PGanadas;
+        this.asignaturas = asignaturas;
+    }
+    public Persona(String DNI, String nombre, String apellidos, String email, String tfno, int tipo, int edad, int genero, String fecha, Curso c,LinkedList<Asignatura> asignaturas) {
         this.DNI = DNI;
         this.nombre = nombre!=null?nombre:"";
         this.apellidos = apellidos!=null?apellidos:"";
@@ -114,7 +119,7 @@ public class Persona {
         return asignaturas;
     }
 
-    public void setAsignaturas(LinkedList asignaturas) {
+    public void setAsignaturas(LinkedList<Asignatura> asignaturas) {
         this.asignaturas = asignaturas;
     }
 
@@ -181,6 +186,15 @@ public class Persona {
     public void setPJugadas(int PJugadas) {
         this.PJugadas = PJugadas;
     }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+    
 
     public int getPGanadas() {
         return PGanadas;

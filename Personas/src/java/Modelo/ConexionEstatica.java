@@ -56,7 +56,48 @@ public class ConexionEstatica {
             JOptionPane.showMessageDialog(null, ex.getMessage(), "Error de Desconexion", JOptionPane.ERROR_MESSAGE);
         }
     }
-
+    private static Persona recogerDatosPersona() {
+        Persona p = null;
+        try {
+            Curso c = new Curso(Conj_Registros.getString("Codigo"), Conj_Registros.getString("Nombre"));
+            p = new Persona(
+                Conj_Registros.getString("DNI"),
+                Conj_Registros.getString("Nombre")!=null?Conj_Registros.getString("Nombre"):"",
+                Conj_Registros.getString("Apellidos")!=null?Conj_Registros.getString("Apellidos"):"",
+                Conj_Registros.getString("Email")!=null?Conj_Registros.getString("Email"):"",
+                Conj_Registros.getString("Tfno")!=null?Conj_Registros.getString("Tfno"):"",
+                Conj_Registros.getInt("Tipo"),
+                Conj_Registros.getInt("Edad"),
+                Conj_Registros.getInt("Genero"),
+                Conj_Registros.getString("Fecha"),
+                c,
+                Conj_Registros.getInt("PJugadas"),
+                Conj_Registros.getInt("PGanadas"),
+                Conj_Registros.getString("Username"),
+                Conj_Registros.getString("Avatar")                    
+            );
+            
+        } catch (SQLException e) {
+        }
+        return p;
+    }
+    private static LinkedList<Asignatura> recogerAsignaturasPersona(Persona p){
+        LinkedList<Asignatura> asignaturas = new LinkedList<>();
+        try {
+            ConexionEstatica.Conj_Registros = ConexionEstatica.Sentencia_SQL.executeQuery(Consultas.getPersonaAsignaturas(p.getDNI()));
+            while (ConexionEstatica.Conj_Registros.next())//Si devuelve true es que existe.
+            {
+                String codigo = Conj_Registros.getString("Codigo");
+                String nombre = Conj_Registros.getString("Nombre");
+                asignaturas.add(new Asignatura(codigo,nombre));
+                
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error en el acceso a la BD.");
+        }
+        return asignaturas;
+        
+    }
     public static Persona existeUsuario(String dni) {
         Persona existe = null;
         abrirBD();
@@ -64,21 +105,8 @@ public class ConexionEstatica {
             ConexionEstatica.Conj_Registros = ConexionEstatica.Sentencia_SQL.executeQuery(Consultas.getPersona(dni));
             if (ConexionEstatica.Conj_Registros.next())//Si devuelve true es que existe.
             {
-                Curso c = new Curso(Conj_Registros.getString("Codigo"), Conj_Registros.getString("Nombre"));
-                existe = new Persona(
-                        Conj_Registros.getString("DNI"),
-                        Conj_Registros.getString("Nombre"),
-                        Conj_Registros.getString("Apellidos"),
-                        Conj_Registros.getString("Email"),
-                        Conj_Registros.getString("Tfno"),
-                        Conj_Registros.getInt("Tipo"),
-                        Conj_Registros.getInt("Edad"),
-                        Conj_Registros.getInt("Genero"),
-                        Conj_Registros.getString("Fecha"),
-                        c,
-                        Conj_Registros.getInt("PJugadas"),
-                        Conj_Registros.getInt("PGanadas")
-                );
+                existe = recogerDatosPersona();
+                existe.setAsignaturas(recogerAsignaturasPersona(existe));
             }
         } catch (SQLException ex) {
             System.out.println("Error en el acceso a la BD.");
@@ -103,21 +131,8 @@ public class ConexionEstatica {
             ConexionEstatica.Conj_Registros = ConexionEstatica.Sentencia_SQL.executeQuery(Consultas.testPersona(dni, password));
             if (ConexionEstatica.Conj_Registros.next())//Si devuelve true es que existe.
             {
-                Curso c = new Curso(Conj_Registros.getString("Codigo"), Conj_Registros.getString("Nombre"));
-                existe = new Persona(
-                        Conj_Registros.getString("DNI"),
-                        Conj_Registros.getString("Nombre"),
-                        Conj_Registros.getString("Apellidos"),
-                        Conj_Registros.getString("Email"),
-                        Conj_Registros.getString("Tfno"),
-                        Conj_Registros.getInt("Tipo"),
-                        Conj_Registros.getInt("Edad"),
-                        Conj_Registros.getInt("Genero"),
-                        Conj_Registros.getString("Fecha"),
-                        c,
-                        Conj_Registros.getInt("PJugadas"),
-                        Conj_Registros.getInt("PGanadas")
-                );
+                existe = recogerDatosPersona();
+                existe.setAsignaturas(recogerAsignaturasPersona(existe));
             }
         } catch (SQLException ex) {
             System.out.println("Error en el acceso a la BD.");
@@ -134,30 +149,18 @@ public class ConexionEstatica {
      *
      * @return
      */
-    public static LinkedList obtenerPersonas() {
-        LinkedList personasBD = new LinkedList<>();
+    public static LinkedList<Persona> obtenerPersonas() {
+        LinkedList<Persona> personasBD = new LinkedList<>();
         Persona p = null;
         abrirBD();
         try {
-            ConexionEstatica.Conj_Registros = ConexionEstatica.Sentencia_SQL.executeQuery(Consultas.getPersonas);
+            ConexionEstatica.Conj_Registros = ConexionEstatica.Sentencia_SQL.executeQuery(Consultas.getPersonas());
             while (Conj_Registros.next()) {
-                Curso c = new Curso(Conj_Registros.getString("Codigo"), Conj_Registros.getString("Nombre"));
-                p = new Persona(
-                        Conj_Registros.getString("DNI"),
-                        Conj_Registros.getString("Nombre"),
-                        Conj_Registros.getString("Apellidos"),
-                        Conj_Registros.getString("Email"),
-                        Conj_Registros.getString("Tfno"),
-                        Conj_Registros.getInt("Tipo"),
-                        Conj_Registros.getInt("Edad"),
-                        Conj_Registros.getInt("Genero"),
-                        Conj_Registros.getString("Fecha"),
-                        c,
-                        Conj_Registros.getInt("PJugadas"),
-                        Conj_Registros.getInt("PGanadas")
-                );
-
+                p = recogerDatosPersona();
                 personasBD.add(p);
+            }
+            for (Persona persona : personasBD) {
+                persona.setAsignaturas(recogerAsignaturasPersona(persona));
             }
         } catch (SQLException ex) {
             System.out.println("ObtenerPersonas[ERROR] = " + ex.getMessage());
@@ -178,25 +181,13 @@ public class ConexionEstatica {
         Persona p = null;
         abrirBD();
         try {
-            ConexionEstatica.Conj_Registros = ConexionEstatica.Sentencia_SQL.executeQuery(Consultas.getPersonas);
+            ConexionEstatica.Conj_Registros = ConexionEstatica.Sentencia_SQL.executeQuery(Consultas.getPersonas());
             while (Conj_Registros.next()) {
-                Curso c = new Curso(Conj_Registros.getString("Codigo"), Conj_Registros.getString("Nombre"));
-                p = new Persona(
-                        Conj_Registros.getString("DNI"),
-                        Conj_Registros.getString("Nombre"),
-                        Conj_Registros.getString("Apellidos"),
-                        Conj_Registros.getString("Email"),
-                        Conj_Registros.getString("Tfno"),
-                        Conj_Registros.getInt("Tipo"),
-                        Conj_Registros.getInt("Edad"),
-                        Conj_Registros.getInt("Genero"),
-                        Conj_Registros.getString("Fecha"),
-                        c,
-                        Conj_Registros.getInt("PJugadas"),
-                        Conj_Registros.getInt("PGanadas")
-                );
-
+                p = recogerDatosPersona();
                 personas.put(p.getDNI(), p);
+            }
+            for (String dni : personas.keySet()) {
+                personas.get(dni).setAsignaturas(recogerAsignaturasPersona(personas.get(dni)));
             }
         } catch (SQLException ex) {
             System.out.println("ObtenerPersonas2[ERROR] = " + ex.getMessage());
@@ -234,6 +225,34 @@ public class ConexionEstatica {
             if (existeUsuario(persona.getDNI()) == null) {
                 abrirBD();
                 ConexionEstatica.Sentencia_SQL.executeUpdate(Consultas.insertPersona(persona));
+                for (Asignatura asignatura : persona.getAsignaturas()) {
+                    ConexionEstatica.Sentencia_SQL.executeUpdate(Consultas.insertPersonaAsignatura(persona, asignatura));
+                }
+                hecho = true;
+            }
+        } catch (Exception e) {
+            System.out.println("AgregarPersona[Error] = " + e.getMessage());
+            hecho = false;
+        } finally {
+            cerrarBD();
+        }
+
+        return hecho;
+    }
+    /**
+     * Comprueba si existe una entrada con el mismo DNI. Si no existe agrega una
+     * entrada con la persona
+     *
+     * @param persona
+     * @return
+     */
+    public static boolean editarPersona(Persona persona) {
+        boolean hecho = false;
+        try {
+            if (existeUsuario(persona.getDNI()) == null) {
+                abrirBD();
+                ConexionEstatica.Sentencia_SQL.executeUpdate(Consultas.updatePersona(persona));
+                ConexionEstatica.Sentencia_SQL.executeUpdate(Consultas.deletePersonaAsignaturas(persona));
                 for (Asignatura asignatura : persona.getAsignaturas()) {
                     ConexionEstatica.Sentencia_SQL.executeUpdate(Consultas.insertPersonaAsignatura(persona, asignatura));
                 }

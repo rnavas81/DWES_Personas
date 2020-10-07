@@ -4,13 +4,15 @@
     Author     : rodrigo
 --%>
 
-<%@page import="Modelo.Asignatura"%>
 <%@page import="Modelo.Curso"%>
-<%@page import="Auxiliar.Constantes"%>
+<%@page import="Modelo.Asignatura"%>
+<%@page import="java.util.LinkedList"%>
 <%@page import="Modelo.ConexionEstatica"%>
+<%@page import="Auxiliar.Constantes"%>
 <%@page import="Modelo.Persona"%>
-<%@page import="java.util.*"%>
-<%    // Recupera la acción 
+<%@page import="java.util.ArrayList"%>
+<%
+    // Recupera la acción 
     String accion = request.getParameter("accion");
     if(accion == null){
         if(request.getParameter("eliminar")!=null){
@@ -44,50 +46,41 @@
     //**************************
     //ACCIONES
     if (accion.equals("Acceder")) {
-        String dni = request.getParameter("dni") != null ? request.getParameter("dni") : "";
-        String password = request.getParameter("pass") != null ? request.getParameter("pass") : "";
-        Persona persona = ConexionEstatica.accederUsuario(dni, password);
-        int tipo = -1;
-        if(persona!=null){//Puede acceder
-            session.setAttribute("usuario", persona);
-            tipo = persona.getTipo();
-        }
-        switch (tipo) {
-            case 0://Usuario normal
+        Persona p = (Persona) session.getAttribute("usuario");
+        int tipoAcceso = Integer.parseInt(request.getParameter("tipoAcceso"));
+        switch (tipoAcceso) {
+            case 0:
                 response.sendRedirect(Constantes.V_BIENVENIDO);
                 break;
-            case 1://Usuario administrador
-                response.sendRedirect(Constantes.V_BIENVENIDO_ADMIN);
-                break;
-            default:
-                //session.invalidate();
-                session.setAttribute("msg_index", "DNI o contraseña no valido");
-                response.sendRedirect(Constantes.V_INDEX);
-                break;
-        }
-    } else if (accion.equals("Volver")) {
-        Persona persona = (Persona)session.getAttribute("usuario"); 
-        int tipo = -1;
-        if(persona!=null){//Puede acceder
-            tipo = persona.getTipo();
-        } 
-        switch (tipo) {
-            case 0://Usuario normal
-                response.sendRedirect(Constantes.V_BIENVENIDO);
-                break;
-            case 1://Usuario administrador
-                response.sendRedirect(Constantes.V_BIENVENIDO_ADMIN);
+            case 1:
+                response.sendRedirect(Constantes.V_LISTAR);
                 break;
             default:
                 session.invalidate();
                 response.sendRedirect(Constantes.V_INDEX);
                 break;
-        } 
-    } else if (accion.equals("Registrar")) {
-        response.sendRedirect(Constantes.V_REGISTRAR);
-    } else if(accion.equals("Recuperar")){
-        response.sendRedirect(Constantes.V_RECUPERAR);
-    } else if(accion.equals("Crear")){
+        }
+    } else if (accion.equals("eliminar")) {
+        String dni = request.getParameter("dni");        
+        ConexionEstatica.eliminarPersona(dni);
+        boolean encontrado=false;
+        for (int i = 0; i < personas.size() && !encontrado; i++) {
+                Persona persona = personas.get(i);
+                if(persona.getDNI().equals(dni)){
+                    personas.remove(i);
+                    encontrado=true;
+                }
+            }
+        response.sendRedirect(Constantes.V_LISTAR);
+    } else if (accion.equals("modificar")) {
+        String dni = request.getParameter("dni").trim();
+        for (Persona p : personas) {
+            if (p.getDNI().trim().equals(dni)) {
+                session.setAttribute("persona", p);
+                response.sendRedirect(Constantes.V_EDITAR);
+            }
+        }
+    } else if (accion.equals("Editar")) {
         String dni = request.getParameter("dni")!=null?request.getParameter("dni"):"";
         String password = request.getParameter("password")!=null?request.getParameter("password"):"";
         String nombre = request.getParameter("nombre")!=null?request.getParameter("nombre"):"";
@@ -130,21 +123,30 @@
             }
         }
         Persona p = new Persona(dni, nombre, apellidos, email, telefono, tipo, edad, genero, fecha, curso, fAsignaturas);
-        p.setPassword(password);
+        if(password!=null && !password.isEmpty()){
+            p.setPassword(password);
+        }
         try {
-            ConexionEstatica.agregarPersona(p);
+            ConexionEstatica.editarPersona(p);
+            int i=0;
+            for (Persona persona : personas) {
+                if(persona.getDNI().equals(p.getDNI())){
+                    break;
+                } else {
+                    i++;
+                }
+            }
+            personas.set(i, p);
             session.setAttribute("msg_index", "Usuario creado");
-            personas.add(p);
             response.sendRedirect(Constantes.V_INDEX);                
         } catch (Exception e) {
             response.sendRedirect(Constantes.V_ERROR);
         }
 
-    } else if(accion.equals("Jugar")){
-        response.sendRedirect(Constantes.V_BUSCAMINAS);
-        
+        response.sendRedirect(Constantes.V_LISTAR);
+    } else if (accion.equals("Cancelar")) {
+        response.sendRedirect(Constantes.V_LISTAR);  
     } else {
-        session.invalidate();
         response.sendRedirect(Constantes.V_INDEX);
     }
 %>
