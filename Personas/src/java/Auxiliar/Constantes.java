@@ -10,11 +10,22 @@ package Auxiliar;
  * @author fernando
  */
 public class Constantes {
+    // CLAVES DE SESION
+    public static final String S_PERSONAS = "personas";
+    public static final String S_CURSOS = "cursos";
+    public static final String S_ASIGNATURAS = "asignaturas";
+    
     //BASE DE DATOS
     public static final String BBDD="Personas";
     public static final String usuario="rodrigo";
     public static final String password="Chubaca2020";
     public static final String ficheroBitacora="bitacora.txt";
+    //MAIL
+    public static final String EMAIL_ADDRESS = "auxiliardaw2@gmail.com";
+    public static final String EMAIL_PASSWORD = "Chubaca20";
+    public static final String EMAIL_HOST = "smtp.gmail.com";
+    public static final int EMAIL_PORT = 587;
+    public static final String EMAIL_AUTH = "true";
     
     //TABLAS
     public static final String T_PERSONAS = "Personas";

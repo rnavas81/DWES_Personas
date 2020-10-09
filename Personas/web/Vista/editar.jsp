@@ -26,30 +26,31 @@ and open the template in the editor.
     </head>
     <body>
         <%
-            Persona p =new Persona();
-            if(session.getAttribute("persona")!=null){
+            Persona p = new Persona();
+            if (session.getAttribute("persona") != null) {
                 p = (Persona) session.getAttribute("persona");
             } else {
                 session.invalidate();
                 response.sendRedirect("index.html");
             }
+            // Recupera los datos de sesion
             LinkedList<Curso> cursos = new LinkedList<>();
-            if(session.getAttribute("cursos")!=null){
-                cursos = (LinkedList<Curso>) session.getAttribute("cursos");
+            if (session.getAttribute(Constantes.S_CURSOS) != null) {
+                cursos = (LinkedList) session.getAttribute(Constantes.S_CURSOS);
             } else {
                 cursos = ConexionEstatica.getCursos();
-                session.setAttribute("cursos", cursos);
+                session.setAttribute(Constantes.S_CURSOS, cursos);
             }
             LinkedList<Asignatura> asignaturas = new LinkedList<>();
-            if(session.getAttribute("asignaturas")!=null){
-                asignaturas = (LinkedList<Asignatura>) session.getAttribute("asignaturas");
+            if (session.getAttribute(Constantes.S_ASIGNATURAS) != null) {
+                asignaturas = (LinkedList) session.getAttribute(Constantes.S_ASIGNATURAS);
             } else {
                 asignaturas = ConexionEstatica.getAsignaturas();
-                session.setAttribute("asignaturas", asignaturas);
+                session.setAttribute(Constantes.S_ASIGNATURAS, asignaturas);
             }
-                    
-            %>
-            
+
+        %>
+
         <form action="<%=Constantes.C_CONTROLADOR_ADMIN%>" name="formulario" style="width:max-content" method="POST">
             <div>
                 <label>DNI:</label><input type="text" name="dni" value="<%=p.getDNI()%>" placeholder="000000000#" readonly/>
@@ -66,8 +67,8 @@ and open the template in the editor.
             <div class="izquierda">
                 <fieldset>
                     <legend>Tipo:</legend>
-                    <input type="radio" name="tipo" value="0" <% out.print(p.getTipo()==0?"checked":"");%>/><label>Usuario</label>
-                    <input type="radio" name="tipo" value="1" <% out.print(p.getTipo()==1?"checked":"");%>/><label>Administrador</label>
+                    <input type="radio" name="tipo" value="0" <% out.print(p.getTipo() == 0 ? "checked" : "");%>/><label>Usuario</label>
+                    <input type="radio" name="tipo" value="1" <% out.print(p.getTipo() == 1 ? "checked" : "");%>/><label>Administrador</label>
                 </fieldset>
             </div>
             <div>
@@ -76,8 +77,8 @@ and open the template in the editor.
             <div class="izquierda">
                 <fieldset>
                     <legend>Sexo:</legend>
-                    <input type="radio" name="genero" value="Hombre" <%=p.getGenero()==0?"checked":""%>/><label>Hombre</label>
-                    <input type="radio" name="genero" value="Mujer" <%=p.getGenero()==1?"checked":""%>/><label>Mujer</label>
+                    <input type="radio" name="genero" value="Hombre" <%=p.getGenero() == 0 ? "checked" : ""%>/><label>Hombre</label>
+                    <input type="radio" name="genero" value="Mujer" <%=p.getGenero() == 1 ? "checked" : ""%>/><label>Mujer</label>
                 </fieldset>
             </div>
             <div>
@@ -86,11 +87,11 @@ and open the template in the editor.
             <div class="izquierda">
                 <fieldset>
                     <legend>Asignaturas:</legend>
-                        <%
-                            for (Asignatura asignatura : asignaturas) {
-                            %><label><%=asignatura.getNombre()%></label><input type="checkbox" name="asignaturas" value="<%=asignatura.getCodigo()%>" <%=p.isAsignatura(asignatura.getCodigo())?"checked":""%>/>
-                            <br><%
-                        }%>
+                    <%
+                        for (Asignatura asignatura : asignaturas) {
+                    %><label><%=asignatura.getNombre()%></label><input type="checkbox" name="asignaturas" value="<%=asignatura.getCodigo()%>" <%=p.isAsignatura(asignatura.getCodigo()) ? "checked" : ""%>/>
+                    <br><%
+                                }%>
                 </fieldset>
             </div>
             <div>            
@@ -99,8 +100,8 @@ and open the template in the editor.
                     <select name="curso">
                         <%
                             for (Curso curso : cursos) {
-                            %><option label="<%=curso.getNombre()%>" value="<%=curso.getCodigo()%>" <%=p.getCurso().getCodigo().equals(curso.getCodigo())?"selected":""%>/><%
-                        }%>                        
+                        %><option label="<%=curso.getNombre()%>" value="<%=curso.getCodigo()%>" <%=p.getCurso().getCodigo().equals(curso.getCodigo()) ? "selected" : ""%>/><%
+                                }%>                        
                     </select>
                 </fieldset>
             </div>
@@ -111,6 +112,6 @@ and open the template in the editor.
                 <input type="submit" name="accion" value="Cancelar"/>
             </div>
         </form>
-        <%      session.removeAttribute("persona");     %>
+        <%      session.removeAttribute("persona");%>
     </body>
 </html>

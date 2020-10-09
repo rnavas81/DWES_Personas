@@ -80,22 +80,26 @@ public class Consultas {
     public static String updatePersona(Persona persona) {
         String consulta = "UPDATE " + Constantes.T_PERSONAS + " SET "
                 + "`Tipo` = '" + persona.getTipo() + "'"
-                + "`,Nombre` = '" + persona.getNombre() + "'"
-                + "`,Apellidos` = '" + persona.getApellidos() + "'"
-                + "`,Email` = '" + persona.getEmail() + "'"
-                + "`,Tfno` = '" + persona.getTelefono() + "'"
-                + "`,Edad` = '" + persona.getEdad() + "'"
-                + "`,Genero` = '" + persona.getGenero() + "'"
-                + "`,Fecha` = '" + persona.getFecha() + "'";
+                + ",`Nombre` = '" + persona.getNombre() + "'"
+                + ",`Apellidos` = '" + persona.getApellidos() + "'"
+                + ",`Email` = '" + persona.getEmail() + "'"
+                + ",`Tfno` = '" + persona.getTelefono() + "'"
+                + ",`Edad` = '" + persona.getEdad() + "'"
+                + ",`Genero` = '" + persona.getGenero() + "'"
+                + ",`Fecha` = " + (persona.getFecha().isBlank()?null:"'"+persona.getFecha() + "'")
+                + ",`PJugadas` = '" + persona.getPJugadas()+ "'"
+                + ",`PGanadas` = '" + persona.getPGanadas()+ "'"
+                + ",`Avatar` = '" + persona.getAvatar()+ "'"
+                + ",`Username` = '" + persona.getUsername()+ "'";
         if (!persona.getPassword().isBlank()) {
-            consulta += "`,Password` = '" + persona.getPassword() + "'";
+            consulta += ",`Password` = '" + persona.getPassword() + "'";
         }
         if (persona.getCurso() != null) {
-            consulta += "`,Curso` = '" + persona.getCurso().getCodigo() + "'";
+            consulta += ",`Curso` = '" + persona.getCurso().getCodigo() + "'";
         } else {
-            consulta += "`,Curso` = NULL";
+            consulta += ",`Curso` = NULL";
         }
-        consulta += "WHERE DNI='" + persona.getDNI() + "'";
+        consulta += " WHERE DNI='" + persona.getDNI() + "'";
         return consulta;
     }
 

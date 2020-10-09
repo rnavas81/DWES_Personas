@@ -26,22 +26,25 @@
     }
     // Recupera los datos de sesion
     LinkedList<Persona> personas = new LinkedList<>();
-    if(session.getAttribute("personas")!=null){
-        personas = (LinkedList) session.getAttribute("personas");
+    if(session.getAttribute(Constantes.S_PERSONAS)!=null){
+        personas = (LinkedList) session.getAttribute(Constantes.S_PERSONAS);
     } else {
         personas = ConexionEstatica.obtenerPersonas();
+        session.setAttribute(Constantes.S_PERSONAS, personas);
     }
     LinkedList<Curso> cursos = new LinkedList<>();
-    if(session.getAttribute("cursos")!=null){
-        cursos = (LinkedList) session.getAttribute("cursos");
+    if(session.getAttribute(Constantes.S_CURSOS)!=null){
+        cursos = (LinkedList) session.getAttribute(Constantes.S_CURSOS);
     } else {
         cursos = ConexionEstatica.getCursos();
+        session.setAttribute(Constantes.S_CURSOS, cursos);
     }
     LinkedList<Asignatura> asignaturas = new LinkedList<>();
-    if(session.getAttribute("asignaturas")!=null){
-        asignaturas = (LinkedList) session.getAttribute("asignaturas");
+    if(session.getAttribute(Constantes.S_ASIGNATURAS)!=null){
+        asignaturas = (LinkedList) session.getAttribute(Constantes.S_ASIGNATURAS);
     } else {
         asignaturas = ConexionEstatica.getAsignaturas();
+        session.setAttribute(Constantes.S_ASIGNATURAS, asignaturas);
     }
     //**************************
     //ACCIONES
@@ -122,28 +125,26 @@
                 }
             }
         }
-        Persona p = new Persona(dni, nombre, apellidos, email, telefono, tipo, edad, genero, fecha, curso, fAsignaturas);
+       Persona p = new Persona(dni, nombre, apellidos, email, telefono, tipo, edad, genero, fecha, curso, fAsignaturas);
         if(password!=null && !password.isEmpty()){
             p.setPassword(password);
         }
         try {
             ConexionEstatica.editarPersona(p);
-            int i=0;
-            for (Persona persona : personas) {
+            boolean buscando = true;
+            for(int i=0;i<personas.size() && buscando;i++){
+                Persona persona = personas.get(i);
                 if(persona.getDNI().equals(p.getDNI())){
-                    break;
-                } else {
-                    i++;
+                    buscando = false;
+                    personas.set(i, p);
                 }
             }
-            personas.set(i, p);
-            session.setAttribute("msg_index", "Usuario creado");
-            response.sendRedirect(Constantes.V_INDEX);                
+            session.setAttribute("msg_index", "Usuario modificado");
+            response.sendRedirect(Constantes.V_LISTAR);
         } catch (Exception e) {
+            System.out.println("Editar[Error] "+e.getMessage());
             response.sendRedirect(Constantes.V_ERROR);
         }
-
-        response.sendRedirect(Constantes.V_LISTAR);
     } else if (accion.equals("Cancelar")) {
         response.sendRedirect(Constantes.V_LISTAR);  
     } else {

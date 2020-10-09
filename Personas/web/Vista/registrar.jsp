@@ -19,19 +19,21 @@ and open the template in the editor.
     </head>
     <body>
         <%
+
+            // Recupera los datos de sesion
             LinkedList<Curso> cursos = new LinkedList<>();
-            if(session.getAttribute("cursos")!=null){
-                cursos = (LinkedList<Curso>) session.getAttribute("cursos");
+            if (session.getAttribute(Constantes.S_CURSOS) != null) {
+                cursos = (LinkedList) session.getAttribute(Constantes.S_CURSOS);
             } else {
                 cursos = ConexionEstatica.getCursos();
-                session.setAttribute("cursos", cursos);
+                session.setAttribute(Constantes.S_CURSOS, cursos);
             }
             LinkedList<Asignatura> asignaturas = new LinkedList<>();
-            if(session.getAttribute("asignaturas")!=null){
-                asignaturas = (LinkedList<Asignatura>) session.getAttribute("asignaturas");
+            if (session.getAttribute(Constantes.S_ASIGNATURAS) != null) {
+                asignaturas = (LinkedList) session.getAttribute(Constantes.S_ASIGNATURAS);
             } else {
                 asignaturas = ConexionEstatica.getAsignaturas();
-                session.setAttribute("asignaturas", asignaturas);
+                session.setAttribute(Constantes.S_ASIGNATURAS, asignaturas);
             }
         %>
 
@@ -74,11 +76,11 @@ and open the template in the editor.
             <div class="izquierda">
                 <fieldset>
                     <legend>Asignaturas:</legend>
-                        <%
-                            for (Asignatura asignatura : asignaturas) {
-                            %><label><%=asignatura.getNombre()%></label><input type="checkbox" name="asignaturas" value="<%=asignatura.getCodigo()%>"/>
-                            <br><%
-                        }%>
+                    <%
+                        for (Asignatura asignatura : asignaturas) {
+                    %><label><%=asignatura.getNombre()%></label><input type="checkbox" name="asignaturas" value="<%=asignatura.getCodigo()%>"/>
+                    <br><%
+                                }%>
                 </fieldset>
             </div>
             <div>            
@@ -86,11 +88,11 @@ and open the template in the editor.
                     <legend>Curso:</legend>
                     <select name="curso">
                         <%
-                            boolean primero=true;
+                            boolean primero = true;
                             for (Curso curso : cursos) {
-                            %><option label="<%=curso.getNombre()%>" value="<%=curso.getCodigo()%>" <%=primero?"selected":""%>/><%
-                                primero=false;
-                        }%>                        
+                        %><option label="<%=curso.getNombre()%>" value="<%=curso.getCodigo()%>" <%=primero ? "selected" : ""%>/><%
+                                    primero = false;
+                                }%>                        
                     </select>
                 </fieldset>
             </div>

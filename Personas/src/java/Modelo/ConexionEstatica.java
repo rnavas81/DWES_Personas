@@ -42,7 +42,7 @@ public class ConexionEstatica {
                     "jdbc:mariadb://localhost:3306/" + Constantes.BBDD, Constantes.usuario, Constantes.password);
             Sentencia_SQL = Conex.createStatement();
             System.out.println("Conexion realizada con éxito");
-        } catch (Exception e) {
+        } catch (ClassNotFoundException | SQLException e) {
             System.err.println("Exception: " + e.getMessage());
         }
     }
@@ -151,7 +151,7 @@ public class ConexionEstatica {
      */
     public static LinkedList<Persona> obtenerPersonas() {
         LinkedList<Persona> personasBD = new LinkedList<>();
-        Persona p = null;
+        Persona p;
         abrirBD();
         try {
             ConexionEstatica.Conj_Registros = ConexionEstatica.Sentencia_SQL.executeQuery(Consultas.getPersonas());
@@ -177,8 +177,8 @@ public class ConexionEstatica {
      * @return
      */
     public static HashMap<String, Persona> obtenerPersonas2() {
-        HashMap<String, Persona> personas = new HashMap<String, Persona>();
-        Persona p = null;
+        HashMap<String, Persona> personas = new HashMap<>();
+        Persona p;
         abrirBD();
         try {
             ConexionEstatica.Conj_Registros = ConexionEstatica.Sentencia_SQL.executeQuery(Consultas.getPersonas());
@@ -191,7 +191,7 @@ public class ConexionEstatica {
             }
         } catch (SQLException ex) {
             System.out.println("ObtenerPersonas2[ERROR] = " + ex.getMessage());
-            personas = new HashMap<String, Persona>();
+            personas = new HashMap<>();
         } finally {
             cerrarBD();
         }
@@ -203,7 +203,7 @@ public class ConexionEstatica {
         abrirBD();
         try {
             ConexionEstatica.Sentencia_SQL.executeUpdate(Consultas.deletePersona(DNI));
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("EliminarPersona[ERROR] = " + e.getMessage());
             hecho = false;
         } finally {
@@ -230,7 +230,7 @@ public class ConexionEstatica {
                 }
                 hecho = true;
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("AgregarPersona[Error] = " + e.getMessage());
             hecho = false;
         } finally {
@@ -249,20 +249,22 @@ public class ConexionEstatica {
     public static boolean editarPersona(Persona persona) {
         boolean hecho = false;
         try {
-            if (existeUsuario(persona.getDNI()) == null) {
+            if (existeUsuario(persona.getDNI()) != null) {
                 abrirBD();
                 ConexionEstatica.Sentencia_SQL.executeUpdate(Consultas.updatePersona(persona));
                 ConexionEstatica.Sentencia_SQL.executeUpdate(Consultas.deletePersonaAsignaturas(persona));
                 for (Asignatura asignatura : persona.getAsignaturas()) {
                     ConexionEstatica.Sentencia_SQL.executeUpdate(Consultas.insertPersonaAsignatura(persona, asignatura));
+                    
                 }
+                
                 hecho = true;
             }
-        } catch (Exception e) {
-            System.out.println("AgregarPersona[Error] = " + e.getMessage());
+        } catch (SQLException e) {
+            System.out.println("EditarPersona[Error] = " + e.getMessage());
             hecho = false;
         } finally {
-            cerrarBD();
+            if(hecho)cerrarBD();
         }
 
         return hecho;
@@ -271,7 +273,6 @@ public class ConexionEstatica {
         try {
             if (existeUsuario(p.getDNI()) != null) {
                 abrirBD();
-                System.out.println(Consultas.actualizarPerfilPersona(p));
                 ConexionEstatica.Sentencia_SQL.executeUpdate(Consultas.actualizarPerfilPersona(p));
             }
         } catch (SQLException e) {
@@ -288,7 +289,7 @@ public class ConexionEstatica {
                 abrirBD();
                 ConexionEstatica.Sentencia_SQL.executeUpdate(Consultas.ModificarDatoPersona(DNI, "PJugadas", String.valueOf(PJugadas)));
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("addPartida[Error] = " + e.getMessage());
         } finally {
             cerrarBD();
@@ -301,11 +302,24 @@ public class ConexionEstatica {
                 abrirBD();
                 ConexionEstatica.Sentencia_SQL.executeUpdate(Consultas.ModificarDatoPersona(DNI, "PGanadas", String.valueOf(PGanadas)));
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("addPartidaGanada[Error] = " + e.getMessage());
         } finally {
             cerrarBD();
         }
+    }
+    public static void setPassword(Persona p){
+        try {
+            if (existeUsuario(p.getDNI()) != null) {
+                abrirBD();
+                ConexionEstatica.Sentencia_SQL.executeUpdate(Consultas.ModificarDatoPersona(p.getDNI(), "Password", p.getPassword()));
+            }
+        } catch (SQLException e) {
+            System.out.println("setPassword[Error] = " + e.getMessage());
+        } finally {
+            cerrarBD();
+        }
+        
     }
 
     //----------------------------------------------------------
@@ -343,7 +357,7 @@ public class ConexionEstatica {
                 cosasBD.push(item);
             }
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("GetCursos[ERROR] = " + e.getMessage());
             cosasBD = new LinkedList<>();
         } finally {
@@ -369,7 +383,7 @@ public class ConexionEstatica {
                 cosasBD.push(item);
             }
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("GetAsignaturas[ERROR] = " + e.getMessage());
             cosasBD = new LinkedList<>();
         } finally {
